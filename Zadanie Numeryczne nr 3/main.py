@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import time
 
 def initMatrix(N, mat):
@@ -67,10 +67,12 @@ def measurePerformance(N):
         if (i+2 < N):
             matU[i][i+2] = arrU2[i]
 
+    # create original matrix by multiplying L and U
+    LU = np.matmul(np.matrix(matL), np.matrix(matU))
+
     #print("Og:")
     #print(np.matrix(mat))
     #print("My:")
-    LU = np.matmul(np.matrix(matL), np.matrix(matU))
     #print(LU)
     
     #print(np.allclose(mat, LU, atol=0.1))
@@ -78,11 +80,26 @@ def measurePerformance(N):
     return delta
 
 results = []
-for i in range(4000, 8000, 100):
+
+start = 100
+end = 4500
+step = 100
+for i in range(start, end, step):
     delta = measurePerformance(i)
     results.append(delta)
     print("N: " + str(i) + " Time in ms: " + str(delta))
 print(results)
+
+yPoints = [start - step + i * step for i in range(1, int(end / step))]
+
+plt.plot(yPoints, results, marker='o', linestyle='-')
+
+plt.xlabel('Parametr N')
+plt.ylabel('Czas działania funkcji (ms)')
+plt.title('Wykres zależności czasu wykonywania od parametru N')
+
+plt.show()
+
 
 # measurePerformance(1324)
 
