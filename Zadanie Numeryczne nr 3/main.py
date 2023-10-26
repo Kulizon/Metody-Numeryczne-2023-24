@@ -11,9 +11,7 @@ def initMatrix(N, mat):
         if (i+2 < N):
             mat[i][i+2] = (0.15)/(i+1)**2 # set 0.15/(i+1)**2 under diag
 
-# todo: sprawdz jak sie liczylo wyzacznik L, U skoro nie sa diagonalne
-
-def measurePerformance(N):
+def solveAndMeasurePerformance(N):
     x = [0 for i in range(N)]
     for i in range(N):
         x[i] = i+1
@@ -50,7 +48,6 @@ def measurePerformance(N):
     end = time.perf_counter()
     delta = (end - start) * 1000
 
-
     # create L matrix
     matL = [[0 for i in range(N)] for j in range(N)] 
     for i in range(N):
@@ -70,39 +67,35 @@ def measurePerformance(N):
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(matL), np.matrix(matU))
 
-    #print("Og:")
-    #print(np.matrix(mat))
-    #print("My:")
-    #print(LU)
-    
+    # check for equality
     #print(np.allclose(mat, LU, atol=0.1))
 
     return delta
 
-results = []
+# todo: sprawdz jak sie liczylo wyzacznik L, U skoro nie sa diagonalne
+# todo: solve equation x = (1, 2, ..., 124)^T etc
 
+
+
+
+"""
+results = []
 start = 100
 end = 4500
 step = 100
 for i in range(start, end, step):
-    delta = measurePerformance(i)
+    delta = solveAndMeasurePerformance(i)
     results.append(delta)
     print("N: " + str(i) + " Time in ms: " + str(delta))
-print(results)
 
 yPoints = [start - step + i * step for i in range(1, int(end / step))]
 
 plt.plot(yPoints, results, marker='o', linestyle='-')
-
 plt.xlabel('Parametr N')
 plt.ylabel('Czas działania funkcji (ms)')
 plt.title('Wykres zależności czasu wykonywania od parametru N')
-
 plt.show()
-
-
-# measurePerformance(1324)
-
+"""
 
 
 
