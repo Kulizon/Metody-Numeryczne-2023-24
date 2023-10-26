@@ -26,7 +26,7 @@ def measurePerformance(N):
     arrU2 = [0 for i in range(N)] 
 
     initMatrix(N, mat)
-    start = time.time() * 1000
+    start = time.perf_counter()
 
     for i in range(N):
         # calc U
@@ -47,8 +47,8 @@ def measurePerformance(N):
         if (i+2 < N):
             arrU2[i] = mat[i][i+2]
 
-    end = time.time() * 1000
-    delta = end - start
+    end = time.perf_counter()
+    delta = (end - start) * 1000
 
 
     # create L matrix
@@ -67,11 +67,28 @@ def measurePerformance(N):
         if (i+2 < N):
             matU[i][i+2] = arrU2[i]
 
-    print("Og:")
-    print(np.matrix(mat))
-    print("My:")
-    print(np.matmul(np.matrix(matL), np.matrix(matU)))
-    print("N: " + str(N) + " Time in ms: " + str(delta))
+    #print("Og:")
+    #print(np.matrix(mat))
+    #print("My:")
+    LU = np.matmul(np.matrix(matL), np.matrix(matU))
+    #print(LU)
+    
+    #print(np.allclose(mat, LU, atol=0.1))
 
-measurePerformance(5)
+    return delta
+
+results = []
+for i in range(4000, 8000, 100):
+    delta = measurePerformance(i)
+    results.append(delta)
+    print("N: " + str(i) + " Time in ms: " + str(delta))
+print(results)
+
+# measurePerformance(1324)
+
+
+
+
+
+
 
