@@ -41,14 +41,14 @@ def calcU1(i, mat, matL, matU):
         return # todo: maybe split these cases into 2 ant work in i-1 <= -1
 
     u1 = mat[i][i+1] - matL[i][i+1]*matU[i-1][i+1]
-    matU[i+1][i] = u1
+    matU[i][i+1] = u1
 
 def calcU2(i, mat, matL, matU):
     if (i+2 >= N):
         return
 
     u2 = mat[i][i+2]
-    matU[i+2][i] = u2
+    matU[i][i+2] = u2
 
 
 
