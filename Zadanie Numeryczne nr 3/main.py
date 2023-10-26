@@ -11,6 +11,11 @@ def initMatrix(N, mat):
         if (i+2 < N):
             mat[i][i+2] = (0.15)/(i+1)**2 # set 0.15/(i+1)**2 under diag
 
+def calculateDiagDeterminal(mat, i):
+    if (i == -1):
+        return 1
+    return calculateDiagDeterminal(mat, i-1) * mat[i][i]
+
 def solveAndMeasurePerformance(N):
     x = [0 for i in range(N)]
     for i in range(N):
@@ -67,8 +72,13 @@ def solveAndMeasurePerformance(N):
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(matL), np.matrix(matU))
 
+    print(np.linalg.det(mat))
+    print(calculateDiagDeterminal(LU, N))
+
     # check for equality
     #print(np.allclose(mat, LU, atol=0.1))
+
+    # calculate determinant
 
     return delta
 
@@ -76,7 +86,7 @@ def solveAndMeasurePerformance(N):
 # todo: solve equation x = (1, 2, ..., 124)^T etc
 
 
-
+solveAndMeasurePerformance(124)
 
 """
 results = []
