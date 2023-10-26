@@ -50,11 +50,28 @@ def measurePerformance(N):
     end = time.time() * 1000
     delta = end - start
 
-    # print("Og:")
-    # print(np.matrix(mat))
-    # print("My:")
-    # print(np.matmul(np.matrix(matL), np.matrix(matU)))
+
+    # create L matrix
+    matL = [[0 for i in range(N)] for j in range(N)] 
+    for i in range(N):
+        matL[i][i] = 1
+        if (i+1 < N):
+            matL[i+1][i] = arrL1[i]
+
+    # create U matrix
+    matU = [[0 for i in range(N)] for j in range(N)] 
+    for i in range(N):
+        matU[i][i] = arrU[i]
+        if (i+1 < N):
+            matU[i][i+1] = arrU1[i]
+        if (i+2 < N):
+            matU[i][i+2] = arrU2[i]
+
+    print("Og:")
+    print(np.matrix(mat))
+    print("My:")
+    print(np.matmul(np.matrix(matL), np.matrix(matU)))
     print("N: " + str(N) + " Time in ms: " + str(delta))
 
-measurePerformance(1000)
+measurePerformance(5)
 
