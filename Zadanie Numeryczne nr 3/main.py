@@ -104,36 +104,28 @@ def backsubsitution(x, matL, matU, N):
     # LUy = x ---> Lz = x, Uy = z
 
     # Lz = x
-
     L = matL.copy() 
     U = matU.copy() 
 
     z = [0 for i in range(N)]
     for i in range(N):
         tmp = x[i]
-        for j in range(i):
-            tmp -= z[j] * L[i][j]
+        if (i-1 >= 0):
+            tmp -= z[i-1] * L[i][i-1] # this is okay because only non-zero values are at L[i+1][i]
             
         z[i] = tmp / L[i][i]
 
     # Uy = z
-
     y = np.zeros(N)
-
     for i in range(N-1, -1, -1):
         tmp = z[i]
-        for j in range(N-1, i, -1):
+        for j in range(N-1, i, -1): # N-3 is okay because of matrix U structure
             tmp -= y[j] * U[i][j]
             
         y[i] = tmp / U[i][i]
 
-    print("Matrix U: ")
-    print(np.matrix(U))
-    print("Vector z: ")
-    print(np.matrix(z))
-    print("Result y: ")
+    print("Result Ay = x: ")
     print(np.matrix(y))
-
 
 
 def solve(N):
@@ -149,16 +141,14 @@ def solve(N):
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(L), np.matrix(U))
 
-    backsubsitution(x, L, U, N)
-
     # check for equality
     print("Is original Matrix equal to created LU?")
     print(np.allclose(mat, LU, atol=0.01))
 
-    # print("Original matrix")
-    # print(np.matrix(mat))
-    # print("LU matrix: ")
-    # print(LU)
+    print("Original matrix")
+    print(np.matrix(mat))
+    print("LU matrix: ")
+    print(LU)
 
     # calculate determinant
     print("Determinant of original matrix calculated using numpy:")
@@ -166,12 +156,11 @@ def solve(N):
     print("Determinant of LU matrix calculated using my function:")
     print(1 * calculateDiagDeterminal(U))
 
+    backsubsitution(x, L, U, N)
+
     return delta
 
-# todo: solve equation x = (1, 2, ..., 124)^T etc
-
-# todo: fix LU solver
-solve(3)
+solve(5)
 
 """
 results = []
