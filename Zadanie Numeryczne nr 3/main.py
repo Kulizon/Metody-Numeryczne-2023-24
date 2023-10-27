@@ -72,6 +72,8 @@ def backsubsitution(x, matL, matU, N):
     # Ay = x
     # LUy = x ---> Lz = x, Uy = z
 
+    start = time.perf_counter()
+
     # Lz = x
     L = matL.copy() 
     U = matU.copy() 
@@ -96,7 +98,10 @@ def backsubsitution(x, matL, matU, N):
             
         y[i] = tmp / U[i][i]
 
-    return y
+    end = time.perf_counter()
+    delta = (end - start) * 1000
+
+    return y, delta
 
 
 def solve(N):
@@ -107,7 +112,8 @@ def solve(N):
     mat = [[0 for i in range(N)] for j in range(N)] 
     initMatrix(N, mat)
     
-    L, U, delta = decomposeMatrixAndMeasurePerformance(mat, N)
+    L, U, deltaLU = decomposeMatrixAndMeasurePerformance(mat, N)
+    y, deltaSolve = backsubsitution(x, L, U, N)
 
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(L), np.matrix(U))
@@ -129,7 +135,7 @@ def solve(N):
     print(1 * calculateDiagDeterminal(U))
     print()
 
-    y = backsubsitution(x, L, U, N)
+    
     numpyY = np.linalg.solve(LU, x)
     print("Result Ay = x using back substitution: ")
     print(y)
@@ -139,15 +145,15 @@ def solve(N):
     print(np.allclose(y, numpyY, atol=0.01))
     print()
 
-    return delta
+    return deltaLU + deltaSolve
 
 solve(124)
 
-"""
+
 results = []
-start = 100
-end = 3000
-step = 100
+start = 10
+end = 1500
+step = 10
 for N in range(start, end, step):
     mat = [[0 for i in range(N)] for j in range(N)] 
     initMatrix(N, mat)
@@ -156,14 +162,14 @@ for N in range(start, end, step):
     results.append(delta)
     print("N: " + str(N) + " Time in ms: " + str(delta))
 
-yPoints = [start - step + i * step for i in range(1, int(end / step))]
+yPoints = [start + i * step for i in range(1, int(end / step))]
 
 plt.plot(yPoints, results, marker='o', linestyle='-')
 plt.xlabel('Parametr N')
 plt.ylabel('Czas działania funkcji (ms)')
 plt.title('Wykres zależności czasu wykonywania od parametru N')
 plt.show()
-"""
+
 
 
 
