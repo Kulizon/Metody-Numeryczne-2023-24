@@ -52,23 +52,20 @@ def decomposeMatrixAndMeasurePerformance(mat, N):
 
     return arrU, arrL1, arrU1, arrU2, delta
 
-def backsubsitution(x, matL, matU, N):
+def backsubsitution(x, arrU, arrL1, arrU1, arrU2, N):
     # Ay = x
     # LUy = x ---> Lz = x, Uy = z
 
     start = time.perf_counter()
 
     # Lz = x
-    L = matL.copy() 
-    U = matU.copy() 
-
     z = [0 for i in range(N)]
     for i in range(N):
         tmp = x[i]
         if (i-1 >= 0):
-            tmp -= z[i-1] * L[i][i-1] # this is okay because only non-zero values are at L[i+1][i]
+            tmp -= z[i-1] * arrL1[i-1] # this is okay because only non-zero values are at L[i+1][i]
             
-        z[i] = tmp / L[i][i]
+        z[i] = tmp
 
     # Uy = z
     y = np.zeros(N)
@@ -76,11 +73,11 @@ def backsubsitution(x, matL, matU, N):
         tmp = z[i]
 
         if (i+1 < N):
-            tmp -= y[i+1] * U[i][i+1] # this is okay because only non-zero values are at U[i][i+1] and at U[i][i+2]
+            tmp -= y[i+1] * arrU1[i] # this is okay because only non-zero values are at U[i][i+1] and at U[i][i+2]
         if (i+2 < N):
-            tmp -= y[i+2] * U[i][i+2] 
+            tmp -= y[i+2] * arrU2[i]
             
-        y[i] = tmp / U[i][i]
+        y[i] = tmp / arrU[i]
 
     end = time.perf_counter()
     delta = (end - start) * 1000
@@ -114,7 +111,7 @@ def solve(N):
         if (i+2 < N):
             U[i][i+2] = arrU2[i]
 
-    y, deltaSolve = backsubsitution(x, L, U, N)
+    y, deltaSolve = backsubsitution(x, arrU, arrL1, arrU1, arrU2, N)
 
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(L), np.matrix(U))
