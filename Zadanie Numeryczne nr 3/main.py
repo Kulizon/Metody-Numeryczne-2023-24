@@ -50,23 +50,7 @@ def decomposeMatrixAndMeasurePerformance(mat, N):
     end = time.perf_counter()
     delta = (end - start) * 1000
 
-    # create L matrix
-    matL = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        matL[i][i] = 1
-        if (i+1 < N):
-            matL[i+1][i] = arrL1[i]
-
-    # create U matrix
-    matU = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        matU[i][i] = arrU[i]
-        if (i+1 < N):
-            matU[i][i+1] = arrU1[i]
-        if (i+2 < N):
-            matU[i][i+2] = arrU2[i]
-
-    return matL, matU, delta
+    return arrU, arrL1, arrU1, arrU2, delta
 
 def backsubsitution(x, matL, matU, N):
     # Ay = x
@@ -112,7 +96,24 @@ def solve(N):
     mat = [[0 for i in range(N)] for j in range(N)] 
     initMatrix(N, mat)
     
-    L, U, deltaLU = decomposeMatrixAndMeasurePerformance(mat, N)
+    arrU, arrL1, arrU1, arrU2, deltaLU = decomposeMatrixAndMeasurePerformance(mat, N)
+
+    # create L matrix
+    L = [[0 for i in range(N)] for j in range(N)] 
+    for i in range(N):
+        L[i][i] = 1
+        if (i+1 < N):
+            L[i+1][i] = arrL1[i]
+
+    # create U matrix
+    U = [[0 for i in range(N)] for j in range(N)] 
+    for i in range(N):
+        U[i][i] = arrU[i]
+        if (i+1 < N):
+            U[i][i+1] = arrU1[i]
+        if (i+2 < N):
+            U[i][i+2] = arrU2[i]
+
     y, deltaSolve = backsubsitution(x, L, U, N)
 
     # create original matrix by multiplying L and U
@@ -147,9 +148,9 @@ def solve(N):
 
     return deltaLU + deltaSolve
 
-solve(124)
+solve(4)
 
-
+"""
 results = []
 start = 10
 end = 1500
@@ -169,7 +170,7 @@ plt.xlabel('Parametr N')
 plt.ylabel('Czas działania funkcji (ms)')
 plt.title('Wykres zależności czasu wykonywania od parametru N')
 plt.show()
-
+"""
 
 
 
