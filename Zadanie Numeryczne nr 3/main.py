@@ -64,10 +64,10 @@ def solveAndMeasurePerformance(N):
     for i in range(N):
        
         # calc U
-        if (i-1 >= 0):
+        if (i-1 < 0):
             arrU[i] = mat[i][i]
         else:
-            arrU[i] = mat[i][i] - arrL1[i-1] * arrU1[i]
+            arrU[i] = mat[i][i] - arrL1[i-1] * arrU1[i-1]
         
         # calc L1
         if (i+1 < N): 
@@ -113,19 +113,21 @@ def solveAndMeasurePerformance(N):
     print("Is original Matrix equal to LU?")
     print(np.allclose(mat, LU, atol=0.1))
 
-    print("Original matrix: ")
-    print(np.matrix(mat))
-    print("Matrix LU: ")
-    print(np.matrix(LU))
-
     scipyP, scipyL, scipyU = scipy.linalg.lu(mat)
+    scipyLU = np.matmul(np.matrix(scipyL), np.matrix(scipyU))
+
+    print("scipy U matrix: ")
+    print(np.matrix(scipyU))
+    print("my U matrix: ")
+    print(np.matrix(matU))
+
     # calculate determinant
     print("Determinant of original matrix calculated using numpy:")
-    print(np.linalg.det(np.matrix(mat, dtype=np.float64)))
+    print(np.linalg.det(np.matrix(mat)))
     print("Determinant of LU matrix created by multiplying matL and matU calculated using numpy:")
-    print(np.linalg.det(np.matrix(LU, dtype=np.float64)))
+    print(np.linalg.det(LU))
     print("Determinant of LU matrix created using scipy and calculated using numpy:")
-    print(1 * np.linalg.det(np.matrix(scipyU)))
+    print(1 * np.linalg.det(scipyLU))
     print("Determinant of LU matrix calculated using my function:")
     print(1 * calculateDiagDeterminal(matU))
 
