@@ -50,7 +50,7 @@ def decomposeMatrixAndMeasurePerformance(mat, N):
     end = time.perf_counter()
     delta = (end - start) * 1000
 
-    return arrU, arrL1, arrU1, arrU2, delta
+    return delta, arrU, arrL1, arrU1, arrU2
 
 def backsubsitution(x, arrU, arrL1, arrU1, arrU2, N):
     # Ay = x
@@ -82,10 +82,10 @@ def backsubsitution(x, arrU, arrL1, arrU1, arrU2, N):
     end = time.perf_counter()
     delta = (end - start) * 1000
 
-    return y, delta
+    return delta, y
 
 
-def solve(N):
+def solve(N, debug=False):
     x = [0 for i in range(N)]
     for i in range(N):
         x[i] = i+1
@@ -93,69 +93,66 @@ def solve(N):
     mat = [[0 for i in range(N)] for j in range(N)] 
     initMatrix(N, mat)
     
-    arrU, arrL1, arrU1, arrU2, deltaLU = decomposeMatrixAndMeasurePerformance(mat, N)
+    deltaLU, arrU, arrL1, arrU1, arrU2 = decomposeMatrixAndMeasurePerformance(mat, N)
+    deltaSolve, y = backsubsitution(x, arrU, arrL1, arrU1, arrU2, N)
 
-    # create L matrix
-    L = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        L[i][i] = 1
-        if (i+1 < N):
-            L[i+1][i] = arrL1[i]
+    if (debug):
+        # create L matrix
+        L = [[0 for i in range(N)] for j in range(N)] 
+        for i in range(N):
+            L[i][i] = 1
+            if (i+1 < N):
+                L[i+1][i] = arrL1[i]
 
-    # create U matrix
-    U = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        U[i][i] = arrU[i]
-        if (i+1 < N):
-            U[i][i+1] = arrU1[i]
-        if (i+2 < N):
-            U[i][i+2] = arrU2[i]
+        # create U matrix
+        U = [[0 for i in range(N)] for j in range(N)] 
+        for i in range(N):
+            U[i][i] = arrU[i]
+            if (i+1 < N):
+                U[i][i+1] = arrU1[i]
+            if (i+2 < N):
+                U[i][i+2] = arrU2[i]
 
-    y, deltaSolve = backsubsitution(x, arrU, arrL1, arrU1, arrU2, N)
+        # create original matrix by multiplying L and U
+        LU = np.matmul(np.matrix(L), np.matrix(U))
 
-    # create original matrix by multiplying L and U
-    LU = np.matmul(np.matrix(L), np.matrix(U))
+        # check for equality
+        print("Is original Matrix equal to created LU?")
+        print(np.allclose(mat, LU, atol=0.01))
 
-    # check for equality
-    print("Is original Matrix equal to created LU?")
-    print(np.allclose(mat, LU, atol=0.01))
+        # print("Original matrix")
+        # print(np.matrix(mat))
+        # print("LU matrix: ")
+        # print(LU)
 
-    # print("Original matrix")
-    # print(np.matrix(mat))
-    # print("LU matrix: ")
-    # print(LU)
+        # calculate determinant
+        print()
+        print("Determinant of original matrix calculated using numpy:")
+        print(np.linalg.det(np.matrix(mat)))
+        print("Determinant of LU matrix calculated using my function:")
+        print(1 * calculateDiagDeterminal(U))
+        print()
 
-    # calculate determinant
-    print()
-    print("Determinant of original matrix calculated using numpy:")
-    print(np.linalg.det(np.matrix(mat)))
-    print("Determinant of LU matrix calculated using my function:")
-    print(1 * calculateDiagDeterminal(U))
-    print()
-
-    
-    numpyY = np.linalg.solve(LU, x)
-    print("Result Ay = x using back substitution: ")
-    print(y)
-    print("Result Ay = x using numpy:")
-    print(numpyY)
-    print("Are my results and numpy results equal?")
-    print(np.allclose(y, numpyY, atol=0.01))
-    print()
+        numpyY = np.linalg.solve(LU, x)
+        print("Result Ay = x using back substitution: ")
+        print(y)
+        print("Result Ay = x using numpy:")
+        print(numpyY)
+        print("Are my results and numpy results equal?")
+        print(np.allclose(y, numpyY, atol=0.01))
+        print()
 
     return deltaLU + deltaSolve
 
-solve(4)
+solve(124, True)
 
-"""
+
 results = []
 start = 10
 end = 1500
 step = 10
 for N in range(start, end, step):
-    mat = [[0 for i in range(N)] for j in range(N)] 
-    initMatrix(N, mat)
-    L, U, delta = decomposeMatrixAndMeasurePerformance(mat, N)
+    delta = solve(N)
 
     results.append(delta)
     print("N: " + str(N) + " Time in ms: " + str(delta))
@@ -167,7 +164,6 @@ plt.xlabel('Parametr N')
 plt.ylabel('Czas działania funkcji (ms)')
 plt.title('Wykres zależności czasu wykonywania od parametru N')
 plt.show()
-"""
 
 
 
