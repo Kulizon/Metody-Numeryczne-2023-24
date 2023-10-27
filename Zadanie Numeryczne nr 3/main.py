@@ -99,6 +99,42 @@ def decomposeMatrixAndMeasurePerformance(mat, N):
 
     return matL, matU, delta
 
+def backsubsitution(x, matL, matU, N):
+    # Ay = x
+    # LUy = x ---> Lz = x, Uy = z
+
+    # Lz = x
+
+    L = matL.copy() 
+    U = matU.copy() 
+
+    z = [0 for i in range(N)]
+    for i in range(N):
+        tmp = x[i]
+        for j in range(i):
+            tmp -= z[j] * L[i][j]
+            
+        z[i] = tmp / L[i][i]
+
+    # Uy = z
+
+    y = np.zeros(N)
+
+    for i in range(N-1, -1, -1):
+        tmp = z[i]
+        for j in range(N-1, i, -1):
+            tmp -= y[j] * U[i][j]
+            
+        y[i] = tmp / U[i][i]
+
+    print("Matrix U: ")
+    print(np.matrix(U))
+    print("Vector z: ")
+    print(np.matrix(z))
+    print("Result y: ")
+    print(np.matrix(y))
+
+
 
 def solve(N):
     x = [0 for i in range(N)]
@@ -112,6 +148,8 @@ def solve(N):
 
     # create original matrix by multiplying L and U
     LU = np.matmul(np.matrix(L), np.matrix(U))
+
+    backsubsitution(x, L, U, N)
 
     # check for equality
     print("Is original Matrix equal to created LU?")
@@ -133,17 +171,20 @@ def solve(N):
 # todo: solve equation x = (1, 2, ..., 124)^T etc
 
 # todo: fix LU solver
-solve(124)
+solve(3)
 
 """
 results = []
 start = 100
-end = 4500
+end = 3000
 step = 100
-for i in range(start, end, step):
-    delta = solveAndMeasurePerformance(i)
+for N in range(start, end, step):
+    mat = [[0 for i in range(N)] for j in range(N)] 
+    initMatrix(N, mat)
+    L, U, delta = decomposeMatrixAndMeasurePerformance(mat, N)
+
     results.append(delta)
-    print("N: " + str(i) + " Time in ms: " + str(delta))
+    print("N: " + str(N) + " Time in ms: " + str(delta))
 
 yPoints = [start - step + i * step for i in range(1, int(end / step))]
 
