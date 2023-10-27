@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.linalg
 import time
 
 def initMatrix(N, mat):
@@ -60,10 +61,6 @@ def solveAndMeasurePerformance(N):
     initMatrix(N, mat)
     start = time.perf_counter()
 
-    print("Og matrix")
-    print(np.matrix(mat))
-    print()
-
     for i in range(N):
        
         # calc U
@@ -88,7 +85,7 @@ def solveAndMeasurePerformance(N):
             arrU2[i] = mat[i][i+2]
 
 
-        debug(N, arrU, arrU1, arrU2, arrL1)
+        #debug(N, arrU, arrU1, arrU2, arrL1)
 
     end = time.perf_counter()
     delta = (end - start) * 1000
@@ -113,16 +110,24 @@ def solveAndMeasurePerformance(N):
     LU = np.matmul(np.matrix(matL), np.matrix(matU))
 
     # check for equality
-    #print(np.allclose(mat, LU, atol=0.1))
+    print("Is original Matrix equal to LU?")
+    print(np.allclose(mat, LU, atol=0.1))
 
-    print("OG: ")
+    print("Original matrix: ")
     print(np.matrix(mat))
-    print("LU: ")
-    print(LU)
+    print("Matrix LU: ")
+    print(np.matrix(LU))
 
+    scipyP, scipyL, scipyU = scipy.linalg.lu(mat)
     # calculate determinant
-    print(np.linalg.det(mat))
-    print(calculateDiagDeterminal(matL) * calculateDiagDeterminal(matU))
+    print("Determinant of original matrix calculated using numpy:")
+    print(np.linalg.det(np.matrix(mat, dtype=np.float64)))
+    print("Determinant of LU matrix created by multiplying matL and matU calculated using numpy:")
+    print(np.linalg.det(np.matrix(LU, dtype=np.float64)))
+    print("Determinant of LU matrix created using scipy and calculated using numpy:")
+    print(1 * np.linalg.det(np.matrix(scipyU)))
+    print("Determinant of LU matrix calculated using my function:")
+    print(1 * calculateDiagDeterminal(matU))
 
     return delta
 
