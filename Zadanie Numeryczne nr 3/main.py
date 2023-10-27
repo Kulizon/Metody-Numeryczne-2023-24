@@ -11,34 +11,6 @@ def initMatrix(N, mat):
         if (i+2 < N):
             mat[i][i+2] = (0.15)/(i+1)**2 # set 0.15/(i+1)**2 under diag
 
-def debug(N, arrU, arrU1, arrU2, arrL1):
-    # create L matrix
-    matL = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        matL[i][i] = 1
-        if (i+1 < N):
-            matL[i+1][i] = arrL1[i]
-
-    # create U matrix
-    matU = [[0 for i in range(N)] for j in range(N)] 
-    for i in range(N):
-        matU[i][i] = arrU[i]
-        if (i+1 < N):
-            matU[i][i+1] = arrU1[i]
-        if (i+2 < N):
-            matU[i][i+2] = arrU2[i]
-
-    # create original matrix by multiplying L and U
-    LU = np.matmul(np.matrix(matL), np.matrix(matU))
-
-    print("Matrix L")
-    print(np.matrix(matL))
-
-    print("Matrix U")
-    print(np.matrix(matU))
-
-    print()
-
 def calculateDiagDeterminal(mat):
     determinant = 1
     for i in range(len(mat)):
@@ -74,9 +46,6 @@ def decomposeMatrixAndMeasurePerformance(mat, N):
         # calc U2
         if (i+2 < N):
             arrU2[i] = mat[i][i+2]
-
-
-        #debug(N, arrU, arrU1, arrU2, arrL1)
 
     end = time.perf_counter()
     delta = (end - start) * 1000
@@ -127,8 +96,7 @@ def backsubsitution(x, matL, matU, N):
             
         y[i] = tmp / U[i][i]
 
-    print("Result Ay = x: ")
-    print(np.matrix(y))
+    return y
 
 
 def solve(N):
@@ -148,22 +116,32 @@ def solve(N):
     print("Is original Matrix equal to created LU?")
     print(np.allclose(mat, LU, atol=0.01))
 
-    print("Original matrix")
-    print(np.matrix(mat))
-    print("LU matrix: ")
-    print(LU)
+    # print("Original matrix")
+    # print(np.matrix(mat))
+    # print("LU matrix: ")
+    # print(LU)
 
     # calculate determinant
+    print()
     print("Determinant of original matrix calculated using numpy:")
     print(np.linalg.det(np.matrix(mat)))
     print("Determinant of LU matrix calculated using my function:")
     print(1 * calculateDiagDeterminal(U))
+    print()
 
-    backsubsitution(x, L, U, N)
+    y = backsubsitution(x, L, U, N)
+    numpyY = np.linalg.solve(LU, x)
+    print("Result Ay = x using back substitution: ")
+    print(y)
+    print("Result Ay = x using numpy:")
+    print(numpyY)
+    print("Are my results and numpy results equal?")
+    print(np.allclose(y, numpyY, atol=0.01))
+    print()
 
     return delta
 
-solve(5)
+solve(124)
 
 """
 results = []
