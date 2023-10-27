@@ -119,8 +119,11 @@ def backsubsitution(x, matL, matU, N):
     y = np.zeros(N)
     for i in range(N-1, -1, -1):
         tmp = z[i]
-        for j in range(N-1, i, -1): # N-3 is okay because of matrix U structure
-            tmp -= y[j] * U[i][j]
+
+        if (i+1 < N):
+            tmp -= y[i+1] * U[i][i+1] # this is okay because only non-zero values are at U[i][i+1] and at U[i][i+2]
+        if (i+2 < N):
+            tmp -= y[i+2] * U[i][i+2] 
             
         y[i] = tmp / U[i][i]
 
