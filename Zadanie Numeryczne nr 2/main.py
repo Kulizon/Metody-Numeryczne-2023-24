@@ -17,7 +17,7 @@ A2 = np.matrix([[2.645152285, 0.544589368, 0.009976745, 0.327869824, 0.424193304
 b = np.matrix([[-0.642912346], [-1.408195475], [4.595622394], [-5.073473196], [2.178020609]])
 
 # między 0.0000005 a 0.0000012
-# e = ((random.random() * 0.5) + 0.8) * 10**(-5)
+e = ((random.random() * 0.5) + 0.8) * 10**(-5)
 bDist = b + e
 
 outcomeA1 = np.linalg.solve(A1, b)
@@ -25,7 +25,6 @@ outcomeA1dist = np.linalg.solve(A1, bDist)
 
 outcomeA2 = np.linalg.solve(A2, b)
 outcomeA2dist = np.linalg.solve(A2, bDist)
-
 
 print("Wynik A1*y = b")
 print(outcomeA1)
@@ -41,3 +40,12 @@ print(outcomeA2dist)
 print("\n======== Błąd |A2/b - A2/(b + Δb) ========")
 print(np.abs(outcomeA2 - outcomeA2dist))
 print("\n")
+
+cond1 = np.linalg.cond(A1)
+cond2 = np.linalg.cond(A2)
+
+print("\n")
+print("κ(A1) wynosi:")
+print(cond1)
+print("κ(A2) wynosi:")
+print(cond2)
