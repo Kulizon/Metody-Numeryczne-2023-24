@@ -164,9 +164,9 @@ print(sum / numOfTests)
 print()
 
 results = []
-start = 10
-end = 1000
-step = 10
+start = 100
+end = 10000
+step = 100
 for N in range(start, end, step):
     delta = solve(N)
 
