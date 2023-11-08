@@ -44,7 +44,6 @@ print("\n")
 cond1 = np.linalg.cond(A1)
 cond2 = np.linalg.cond(A2)
 
-print("\n")
 print("κ(A1) wynosi:")
 print(cond1)
 print("κ(A2) wynosi:")
