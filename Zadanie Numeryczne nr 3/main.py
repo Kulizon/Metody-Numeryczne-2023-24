@@ -134,15 +134,15 @@ def solve(N, debug=False):
 
         # check for equality
         print("Is original Matrix equal to created LU?")
-        print(np.allclose(initDebugMatrix(N), LU, atol=0.001))
+        print(np.allclose(initDebugMatrix(N), LU, atol=0.00001))
 
         numpyY = np.linalg.solve(LU, x)
-        # print("Result Ay = x using back substitution: ")
-        # print(y)
-        # print("Result Ay = x using numpy:")
-        # print(numpyY)
+        print("Result Ay = x using back substitution: ")
+        print(y)
+        print("Result Ay = x using numpy:")
+        print(numpyY)
         print("Are my results and numpy results equal?")
-        print(np.allclose(y, numpyY, atol=0.001))
+        print(np.allclose(y, numpyY, atol=0.00001))
         print()
 
         # print("Original matrix")
@@ -171,7 +171,7 @@ for N in range(start, end, step):
     delta = solve(N)
 
     results.append(delta)
-    print("N: " + str(N) + " Time in ms: " + str(delta))
+    #print("N: " + str(N) + " Time in ms: " + str(delta))
 
 yPoints = [start + i * step for i in range(1, int(end / step))]
 
