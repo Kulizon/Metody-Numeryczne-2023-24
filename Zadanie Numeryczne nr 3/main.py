@@ -51,7 +51,7 @@ def decomposeMatrixAndMeasurePerformance(arrU, arrL1, arrU1, arrU2, N):
 
             # calc U1
             if (i > 0):
-                arrU1[i] = arrU1[i] - arrL1[i]*arrU2[i-1]
+                arrU1[i] = arrU1[i] - arrL1[i-1]*arrU2[i-1]
 
             # calc U2    
             arrU2[i] = arrU2[i]
