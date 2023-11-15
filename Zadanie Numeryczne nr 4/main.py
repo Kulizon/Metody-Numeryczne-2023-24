@@ -83,9 +83,11 @@ def solve(N, debug):
         numpyResult = np.linalg.solve(mat, b)
 
         print("Is my result equal to numpy result?")
-        # print(numpyResult)
-        # print(x)
-        print(np.allclose(numpyResult, x, 0.00001))
+        print(numpyResult)
+        print()
+        np.set_printoptions(precision=7)
+        print(list(np.mat(x)))
+        print(np.allclose(numpyResult, x, 0.0000001))
 
     return delta
 
