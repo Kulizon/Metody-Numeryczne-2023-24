@@ -26,29 +26,32 @@ def matMulVec(mat, vec):
         result.append(element)
     return result
 
+def maxEigenvalueNumpy(A):
+    eigenvalues = np.linalg.eigvals(A)
+    maxEigenvalue = np.max(np.abs(eigenvalues)) 
+    return maxEigenvalue
+
 def eigenvaluePowerMethod():
     # arrUnderDiag = [0, 1, 2, 3]
     # arrDiag = [8, 7, 6, 5]
     # arrOverDiag = [1, 2, 3, 0]
 
-    A = [[4, 1, 0],
-         [0, 2, 1],
-         [0, 0, -1]]
+    A = [[8, 1, 0, 0],
+         [1, 7, 2, 0],
+         [0, 2, 6, 3],
+         [0, 0, 3, 5]]
 
     curVec = [1 for _ in range(len(A))]
-    result = [curVec]
+    resultVecs = [curVec]
+    resultLambdas = [1]
 
-    i = 0
     while(True):
-    
-        
         curVec = matMulVec(A, curVec)
         lamb, normedVec = normalize(curVec)
         curVec = normedVec
 
-        print(lamb, curVec, normedVec)
-
-        result.append(normedVec)
+        resultVecs.append(normedVec)
+        resultLambdas.append(lamb)
         
         # pomnóż A * normedVec i rozwiaz uklad A * normedVec = x_i
         # x_i unormuj i to bedzie normedVec w nastepnej iteracji
@@ -56,12 +59,13 @@ def eigenvaluePowerMethod():
 
         # jednak pewnie bedzie wolno zbiegac wiec nalezy przesunac A - p * 1
 
-        diff = abs(vecNorm(result[len(result) - 1]) - vecNorm(result[len(result) - 2]))
-        i += 1
-        if (diff < 0.0001 or i > 10):
+        diff = abs(vecNorm(resultVecs[len(resultVecs) - 1]) - vecNorm(resultVecs[len(resultVecs) - 2]))
+        if (diff < 0.00000001):
             break
 
-    print(result[len(result) - 1])
+    print(resultVecs[len(resultVecs) - 1])
+    print(len(resultLambdas))
+    print(resultLambdas[len(resultLambdas) - 1], maxEigenvalueNumpy(A))
 
 
 eigenvaluePowerMethod()
