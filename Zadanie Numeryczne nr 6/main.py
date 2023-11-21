@@ -50,46 +50,71 @@ def eigenValuePowerMethod(A):
         if (diff < 0.00000001):
             break
 
-    eigenVec = resultVecs[len(resultVecs) - 1]
-    eigenVal = resultLambdas[len(resultLambdas) - 1]
+    finalEigenVec = resultVecs[len(resultVecs) - 1]
+    finalEigenVal = resultLambdas[len(resultLambdas) - 1]
 
-    print(eigenVec)
+    print(finalEigenVec)
     print(len(resultLambdas))
-    print(eigenVal, maxEigenValueNumpy(A))
+    print(finalEigenVal, maxEigenValueNumpy(A))
+
+    return resultVecs, resultLambdas
+
+def getDiagElements(A):
+    diag = []
+    for i in range(len(A)):
+        diag.append(A[i][i])
+    return diag
 
 def eigenValueQrMethod(A):
     curMat = A.copy()
     resultMats = [curMat]
+    resultLambdas = [getDiagElements(curMat)]
 
     underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
     while(abs(underDiagSum) > 0.00001):
         # wykorzstaj biblioteczny rozkłąd QR
         Q, R = np.linalg.qr(curMat)
 
-        nextMat = np.matmul(R, Q) # todo: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        nextMat = np.matmul(R, Q) # TODO: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         curMat = nextMat.copy()
         resultMats.append(curMat)
+        resultLambdas.append(getDiagElements(curMat))
 
         underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
 
         # jak bedzie podobna do macierzy trojkatnej gornej to stop, wektory wlasne beda wtedy na diagonali
-
-    resultLambdas = []
-    finalMat = resultMats[len(resultMats) - 1]
-    for i in range(len(A)):
-        resultLambdas.append(finalMat[i][i])
     
-    print(resultLambdas)
+    return resultMats, resultLambdas
+
+def createPowerMethodPlot(eigenVals, A):
+    xPointsPowerMethod = []
+    yPointsPowerMethod = []
+    for i in range(len(eigenVals)):
+        xPointsPowerMethod.append(i+1)
+        yPointsPowerMethod.append(abs(eigenVals[i] - maxEigenValueNumpy(A)))
+
+    plt.plot(xPointsPowerMethod, yPointsPowerMethod, label="Metoda Potęgowa")
+
+    plt.yscale("log")
+    plt.legend()
+    plt.xlabel('Numer iteracji')
+    plt.ylabel('Różnicy przybliżenia i dokładnej wartości własnej')
+    plt.title('TODO: dodaj tytuł')
+    plt.show()
+
+def createQrMethodPlot(eigenVals):
+    print(eigenVals)
 
 A = [[8, 1, 0, 0],
      [1, 7, 2, 0],
      [0, 2, 6, 3],
      [0, 0, 3, 5]]
-# eigenValuePowerMethod(A)
-eigenValueQrMethod(A)
+powerMethodEigenVecs, powerMethodEigenVals = eigenValuePowerMethod(A)
+qrMetodMats, qrMethodEigenVals = eigenValueQrMethod(A)
 
-def solve():
-    return 1
+createPowerMethodPlot(powerMethodEigenVals, A)
+createQrMethodPlot(qrMethodEigenVals)
+
 
 
 
