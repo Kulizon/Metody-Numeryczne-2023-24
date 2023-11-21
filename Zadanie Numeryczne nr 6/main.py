@@ -26,21 +26,12 @@ def matMulVec(mat, vec):
         result.append(element)
     return result
 
-def maxEigenvalueNumpy(A):
-    eigenvalues = np.linalg.eigvals(A)
-    maxEigenvalue = np.max(np.abs(eigenvalues)) 
-    return maxEigenvalue
+def maxEigenValueNumpy(A):
+    eigenValues = np.linalg.eigvals(A)
+    maxEigenValue = np.max(np.abs(eigenValues)) 
+    return maxEigenValue
 
-def eigenvaluePowerMethod():
-    # arrUnderDiag = [0, 1, 2, 3]
-    # arrDiag = [8, 7, 6, 5]
-    # arrOverDiag = [1, 2, 3, 0]
-
-    A = [[8, 1, 0, 0],
-         [1, 7, 2, 0],
-         [0, 2, 6, 3],
-         [0, 0, 3, 5]]
-
+def eigenValuePowerMethod(A):
     curVec = [1 for _ in range(len(A))]
     resultVecs = [curVec]
     resultLambdas = [1]
@@ -52,10 +43,6 @@ def eigenvaluePowerMethod():
 
         resultVecs.append(normedVec)
         resultLambdas.append(lamb)
-        
-        # pomnóż A * normedVec i rozwiaz uklad A * normedVec = x_i
-        # x_i unormuj i to bedzie normedVec w nastepnej iteracji
-        # wykonuj dopóki y_m - y_m-1 < epsilon
 
         # jednak pewnie bedzie wolno zbiegac wiec nalezy przesunac A - p * 1
 
@@ -63,12 +50,43 @@ def eigenvaluePowerMethod():
         if (diff < 0.00000001):
             break
 
-    print(resultVecs[len(resultVecs) - 1])
+    eigenVec = resultVecs[len(resultVecs) - 1]
+    eigenVal = resultLambdas[len(resultLambdas) - 1]
+
+    print(eigenVec)
     print(len(resultLambdas))
-    print(resultLambdas[len(resultLambdas) - 1], maxEigenvalueNumpy(A))
+    print(eigenVal, maxEigenValueNumpy(A))
 
+def eigenValueQrMethod(A):
+    curMat = A.copy()
+    resultMats = [curMat]
 
-eigenvaluePowerMethod()
+    underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
+    while(abs(underDiagSum) > 0.00001):
+        # wykorzstaj biblioteczny rozkłąd QR
+        Q, R = np.linalg.qr(curMat)
+
+        nextMat = np.matmul(R, Q) # todo: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        curMat = nextMat.copy()
+        resultMats.append(curMat)
+
+        underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
+
+        # jak bedzie podobna do macierzy trojkatnej gornej to stop, wektory wlasne beda wtedy na diagonali
+
+    resultLambdas = []
+    finalMat = resultMats[len(resultMats) - 1]
+    for i in range(len(A)):
+        resultLambdas.append(finalMat[i][i])
+    
+    print(resultLambdas)
+
+A = [[8, 1, 0, 0],
+     [1, 7, 2, 0],
+     [0, 2, 6, 3],
+     [0, 0, 3, 5]]
+# eigenValuePowerMethod(A)
+eigenValueQrMethod(A)
 
 def solve():
     return 1
