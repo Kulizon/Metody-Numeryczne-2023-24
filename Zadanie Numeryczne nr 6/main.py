@@ -52,10 +52,11 @@ def eigenValuePowerMethod(A):
 
     finalEigenVec = resultVecs[len(resultVecs) - 1]
     finalEigenVal = resultLambdas[len(resultLambdas) - 1]
-
-    print(finalEigenVec)
-    print(len(resultLambdas))
-    print(finalEigenVal, maxEigenValueNumpy(A))
+    
+    numpyEigenValues, numpyEigenVectors = np.linalg.eig(A)
+    print("Czy moja maksymalna wartość własna obliczona metodą potęgową zgadza się z numpy?")
+    print(abs(max(numpyEigenValues) - finalEigenVal) < 0.000001)
+    print()
 
     return resultVecs, resultLambdas
 
@@ -72,7 +73,6 @@ def eigenValueQrMethod(A):
 
     underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
     while(abs(underDiagSum) > 0.00001):
-        # wykorzstaj biblioteczny rozkłąd QR
         Q, R = np.linalg.qr(curMat)
 
         nextMat = np.matmul(R, Q) # TODO: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -81,9 +81,14 @@ def eigenValueQrMethod(A):
         resultLambdas.append(getDiagElements(curMat))
 
         underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
-
         # jak bedzie podobna do macierzy trojkatnej gornej to stop, wektory wlasne beda wtedy na diagonali
     
+    finalEigenVals = resultLambdas[len(resultLambdas)-1]
+
+    numpyEigenValues, numpyEigenVectors = np.linalg.eig(A)
+    print("Czy moje wartości własne obliczone metodą rozkładu QR zgadza się z numpy?")
+    print(np.allclose(finalEigenVals, numpyEigenValues, 0.000001))
+
     return resultMats, resultLambdas
 
 def createPowerMethodPlot(eigenVals, A):
@@ -117,10 +122,6 @@ def createQrMethodPlot(eigenVals):
             xPoints[i].append(j)
             yPoints[i].append(abs(exactEigenVal - eigenVals[j][i]))
 
-    print()
-    print()
-    print(xPoints)
-
     plt.plot(xPoints[0], yPoints[0], label="Wartość własna 1")
     plt.plot(xPoints[1], yPoints[1], label="Wartość własna 2")
     plt.plot(xPoints[2], yPoints[2], label="Wartość własna 3")
@@ -144,8 +145,8 @@ A = [[8, 1, 0, 0],
 powerMethodEigenVecs, powerMethodEigenVals = eigenValuePowerMethod(A)
 qrMetodMats, qrMethodEigenVals = eigenValueQrMethod(A)
 
-#createPowerMethodPlot(powerMethodEigenVals, A)
-createQrMethodPlot(qrMethodEigenVals)
+# createPowerMethodPlot(powerMethodEigenVals, A)
+# createQrMethodPlot(qrMethodEigenVals)
 
 
 
