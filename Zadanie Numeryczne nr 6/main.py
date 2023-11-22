@@ -58,6 +58,13 @@ def eigenValuePowerMethod(A):
     print(abs(max(numpyEigenValues) - finalEigenVal) < 0.000001)
     print()
 
+    finalNumpyMaxEigenValVec = []
+    for i in range(4):
+        finalNumpyMaxEigenValVec.append(numpyEigenVectors[i][0] / (-0.62856775)) # convert to my base
+    print("Czy mój wektor odpowiadający największej wartości własnej zgadza się z numpy?")
+    print(np.allclose(finalEigenVec, finalNumpyMaxEigenValVec, 0.000001))
+    print()
+
     return resultVecs, resultLambdas
 
 def getDiagElements(A):
@@ -86,8 +93,9 @@ def eigenValueQrMethod(A):
     finalEigenVals = resultLambdas[len(resultLambdas)-1]
 
     numpyEigenValues, numpyEigenVectors = np.linalg.eig(A)
-    print("Czy moje wartości własne obliczone metodą rozkładu QR zgadza się z numpy?")
+    print("Czy moje wartości własne obliczone metodą rozkładu QR zgadzają się z numpy?")
     print(np.allclose(finalEigenVals, numpyEigenValues, 0.000001))
+    print()
 
     return resultMats, resultLambdas
 
