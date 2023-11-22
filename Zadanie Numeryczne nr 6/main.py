@@ -73,13 +73,17 @@ def getDiagElements(A):
         diag.append(A[i][i])
     return diag
 
+def absSumUnderDiag(A):
+    return abs(A[1][0]) + abs(A[2][0]) + abs(A[3][0]) + abs(A[1][2]) + abs(A[1][3]) + abs(A[2][3])
+
 def eigenValueQrMethod(A):
     curMat = A.copy()
     resultMats = [curMat]
     resultLambdas = [getDiagElements(curMat)]
 
-    underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
-    while(abs(underDiagSum) > 0.00001):
+
+    underDiagSums = [absSumUnderDiag(curMat)]
+    while(abs(underDiagSums[len(underDiagSums)-1]) > 0.0000001):
         Q, R = np.linalg.qr(curMat)
 
         nextMat = np.matmul(R, Q) # TODO: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -87,7 +91,7 @@ def eigenValueQrMethod(A):
         resultMats.append(curMat)
         resultLambdas.append(getDiagElements(curMat))
 
-        underDiagSum = curMat[1][0] + curMat[1][2] + curMat[2][3]
+        underDiagSums.append(absSumUnderDiag(curMat))
         # jak bedzie podobna do macierzy trojkatnej gornej to stop, wektory wlasne beda wtedy na diagonali
     
     finalEigenVals = resultLambdas[len(resultLambdas)-1]
@@ -97,7 +101,7 @@ def eigenValueQrMethod(A):
     print(np.allclose(finalEigenVals, numpyEigenValues, 0.000001))
     print()
 
-    return resultMats, resultLambdas
+    return resultMats, resultLambdas, underDiagSums
 
 def createPowerMethodPlot(eigenVals, A):
     xPointsPowerMethod = []
@@ -116,7 +120,6 @@ def createPowerMethodPlot(eigenVals, A):
     plt.show()
 
 def createQrMethodPlot(eigenVals):
-
     exactEigenValues =  eigenVals.pop()
 
     xPoints = []
@@ -142,19 +145,28 @@ def createQrMethodPlot(eigenVals):
     plt.title('TODO: dodaj tytuł')
     plt.show()
     
-    # zapisz ostateczne wyniki w jakiejs tablicy
-    # potem wykorzystaj te wyniki w tworzeniu wykresow
-    # dla kazdej wartosci wlasnej (4) zrob wykres - roznica dokladnego rozwiazania z aktualnym zaleznie od iteracji i
+
+def createQrMethodTriangMatrixPlot(underDiagSums):
+    xPoints = [i for i in range(len(underDiagSums))]
+    yPoints = underDiagSums
+
+    plt.plot(xPoints, yPoints)
+    plt.xlabel('Numer iteracji')
+    plt.ylabel('Suma wartości bezwzględnych \nelementów pod diagonalą')
+    plt.title('Suma wartości bezwzględnych elementów pod diagonalą \nzależnie od numeru iteracji')
+    plt.show()
+
 
 A = [[8, 1, 0, 0],
      [1, 7, 2, 0],
      [0, 2, 6, 3],
      [0, 0, 3, 5]]
 powerMethodEigenVecs, powerMethodEigenVals = eigenValuePowerMethod(A)
-qrMetodMats, qrMethodEigenVals = eigenValueQrMethod(A)
+qrMetodMats, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A)
 
 # createPowerMethodPlot(powerMethodEigenVals, A)
 # createQrMethodPlot(qrMethodEigenVals)
+createQrMethodTriangMatrixPlot(underDiagSums)
 
 
 
