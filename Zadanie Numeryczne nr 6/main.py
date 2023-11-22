@@ -16,7 +16,7 @@ def normalize(vec):
         copy[i] = copy[i] / maxEl
     return maxEl, copy
 
-def matMulVec(mat, vec):
+def matMulVec(mat, vec): # TODO: zrob to w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     result = []
     for i in range(len(mat)):
         element = 0
@@ -103,7 +103,39 @@ def createPowerMethodPlot(eigenVals, A):
     plt.show()
 
 def createQrMethodPlot(eigenVals):
-    print(eigenVals)
+
+    exactEigenValues =  eigenVals.pop()
+
+    xPoints = []
+    yPoints = []
+
+    for i in range(len(exactEigenValues)):
+        exactEigenVal = exactEigenValues[i]
+        xPoints.append([])
+        yPoints.append([])
+        for j in range(len(eigenVals)):
+            xPoints[i].append(j)
+            yPoints[i].append(abs(exactEigenVal - eigenVals[j][i]))
+
+    print()
+    print()
+    print(xPoints)
+
+    plt.plot(xPoints[0], yPoints[0], label="Wartość własna 1")
+    plt.plot(xPoints[1], yPoints[1], label="Wartość własna 2")
+    plt.plot(xPoints[2], yPoints[2], label="Wartość własna 3")
+    plt.plot(xPoints[3], yPoints[3], label="Wartość własna 4")
+
+    plt.yscale("log")
+    plt.legend()
+    plt.xlabel('Numer iteracji')
+    plt.ylabel('Różnicy przybliżenia i dokładnej wartości własnej')
+    plt.title('TODO: dodaj tytuł')
+    plt.show()
+    
+    # zapisz ostateczne wyniki w jakiejs tablicy
+    # potem wykorzystaj te wyniki w tworzeniu wykresow
+    # dla kazdej wartosci wlasnej (4) zrob wykres - roznica dokladnego rozwiazania z aktualnym zaleznie od iteracji i
 
 A = [[8, 1, 0, 0],
      [1, 7, 2, 0],
@@ -112,7 +144,7 @@ A = [[8, 1, 0, 0],
 powerMethodEigenVecs, powerMethodEigenVals = eigenValuePowerMethod(A)
 qrMetodMats, qrMethodEigenVals = eigenValueQrMethod(A)
 
-createPowerMethodPlot(powerMethodEigenVals, A)
+#createPowerMethodPlot(powerMethodEigenVals, A)
 createQrMethodPlot(qrMethodEigenVals)
 
 
