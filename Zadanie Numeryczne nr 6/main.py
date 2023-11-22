@@ -81,9 +81,8 @@ def eigenValueQrMethod(A):
     resultMats = [curMat]
     resultLambdas = [getDiagElements(curMat)]
 
-
     underDiagSums = [absSumUnderDiag(curMat)]
-    while(abs(underDiagSums[len(underDiagSums)-1]) > 0.0000001):
+    while(abs(underDiagSums[len(underDiagSums)-1]) > 0.000001):
         Q, R = np.linalg.qr(curMat)
 
         nextMat = np.matmul(R, Q) # TODO: zrob w O(1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -115,8 +114,8 @@ def createPowerMethodPlot(eigenVals, A):
     plt.yscale("log")
     plt.legend()
     plt.xlabel('Numer iteracji')
-    plt.ylabel('Różnicy przybliżenia i dokładnej wartości własnej')
-    plt.title('TODO: dodaj tytuł')
+    plt.ylabel('Różnicy przybliżenia i dokładnej maksymalnej wartości własnej')
+    plt.title("Różnica przybliżenia i dokładnej maksymalnej wartości własnej \nzależnie od numeru iteracji dla metody potęgowej")
     plt.show()
 
 def createQrMethodPlot(eigenVals):
@@ -142,7 +141,7 @@ def createQrMethodPlot(eigenVals):
     plt.legend()
     plt.xlabel('Numer iteracji')
     plt.ylabel('Różnicy przybliżenia i dokładnej wartości własnej')
-    plt.title('TODO: dodaj tytuł')
+    plt.title("Różnicy przybliżenia i dokładnej wartości własnej \n zależnie od numeru iteracji dla metody QR")
     plt.show()
     
 
@@ -164,8 +163,8 @@ A = [[8, 1, 0, 0],
 powerMethodEigenVecs, powerMethodEigenVals = eigenValuePowerMethod(A)
 qrMetodMats, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A)
 
-# createPowerMethodPlot(powerMethodEigenVals, A)
-# createQrMethodPlot(qrMethodEigenVals)
+createPowerMethodPlot(powerMethodEigenVals, A)
+createQrMethodPlot(qrMethodEigenVals)
 createQrMethodTriangMatrixPlot(underDiagSums)
 
 
