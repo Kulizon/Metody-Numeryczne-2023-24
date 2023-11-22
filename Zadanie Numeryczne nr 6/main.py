@@ -65,6 +65,8 @@ def eigenValuePowerMethod(A):
     print(np.allclose(finalEigenVec, finalNumpyMaxEigenValVec, 0.000001))
     print()
 
+    print(finalEigenVec)
+
     return resultVecs, resultLambdas
 
 def getDiagElements(A):
