@@ -15,54 +15,60 @@ def vectorNorm(a):
         sum += a[i]*a[i]
     return math.sqrt(sum)
 
-def findApprox(b, startVector, method, e):
-    n = len(b)
+def findApprox(startVector, method, e):
+    n = len(startVector)
     
-    prevRes = [0 for _ in range(n)]
-    curRes = startVector.copy()
-    results = [prevRes.copy(), curRes.copy()]
+    x = startVector.copy()
+    xPrev = [0] * n
+    results = [x.copy()]
 
     if (method != "Gauss" and method != "Jacoby"):
         return -1
 
-    while vectorNorm(vecSubVec(curRes, prevRes)) > e:
-        h = curRes.copy()
+    while True:
+        h = x.copy()
 
         for i in range(n):
-            sum = 0
-            if (method == "Jacoby"):
-                if (i - 1 >= 0):
-                    sum += 1 * prevRes[i-1]
-                if (i - 2 >= 0):
-                    sum += 0.15 * prevRes[i-2]
-            if (method == "Gauss"):
-                if (i - 1 >= 0):
-                    sum += 1 * curRes[i-1]
-                if (i - 2 >= 0):
-                    sum += 0.15 * curRes[i-2]
-
+            x[i] = i+1
             if (i + 1 < n):
-                sum += 1 * prevRes[i+1]
+                x[i] -= xPrev[i+1]
             if (i + 2 < n):
-                sum += 0.15 * prevRes[i+2]
+                x[i] -= 0.15 * xPrev[i+2]
 
-            curRes[i] = (b[i] - sum) / 3
-        prevRes = h
-        results.append(curRes.copy())
+            if (method == "Jacoby"):
+                if (i - 2 >= 0):
+                    x[i] -= 0.15 * xPrev[i-2]
+                if (i - 1 >= 0):
+                    x[i] -= xPrev[i-1]
+
+            if (method == "Gauss"):
+                if (i - 2 >= 0):
+                    x[i] -= 0.15 * x[i-2]
+                if (i - 1 >= 0):
+                    x[i] -= x[i-1]
+                
+            x[i] /= 3
+
+        if (vectorNorm(vecSubVec(xPrev, x)) < e):
+            break
+
+        results.append(x.copy())
+        xPrev = h.copy()
 
     return results  
 
 def solve(N, startVector, perfCounting = False, e = 0.000001):
     start = time.perf_counter() * 1000
-    b = [i + 1 for i in range(N)]
 
-    jacobyRes = findApprox(b, startVector, "Jacoby", e)
-    gaussRes = findApprox(b, startVector, "Gauss", e)
+    jacobyRes = findApprox(startVector, "Jacoby", e)
+    gaussRes = findApprox(startVector, "Gauss", e)
 
     runtime = time.perf_counter() * 1000 - start
 
     if (not(perfCounting)):
         A = [[0 for _ in range(N)] for _ in range(N)]
+        b = [i + 1 for i in range(N)]
+        
         for i in range(N):
             for j in range(N):
                 if (j == i):
@@ -83,11 +89,11 @@ def solve(N, startVector, perfCounting = False, e = 0.000001):
 
         print()
         print("Are Jacoby approximations equal to numpy results?")
-        print(np.allclose(jacobyRes[-1], npRes, 0.00001))
+        print(np.allclose(jacobyRes[-1], npRes, e))
         print(list(np.mat(jacobyRes[-1])))
         print()
         print("Are Gauss approximations equal to numpy results?")
-        print(np.allclose(gaussRes[-1], npRes, 0.00001))
+        print(np.allclose(gaussRes[-1], npRes, e))
         print(list(np.mat(gaussRes[-1])))
         print()
     
@@ -95,8 +101,9 @@ def solve(N, startVector, perfCounting = False, e = 0.000001):
 
     return runtime
 
-val = 1
+val = 10
 runtime, xPointsJacoby, xPointsGauss, yPointsJacoby, yPointsGauss = solve(124, [val for i in range(124)], False, 0.000001)
+
 
 plt.plot(xPointsJacoby, yPointsJacoby, label="metoda Jacobiego")
 plt.plot(xPointsGauss, yPointsGauss, label="metoda Gaussa")
@@ -108,33 +115,33 @@ plt.ylabel('Norma różnicy przybliżenia i dokładnego rozwiązania')
 plt.title('Wykres różnicy rozwiązania i przybliżenia od numeru iteracji \n dla wektora startowego = ('+ str(val) + ', ' + str(val) + ', ..., ' + str(val) + ')')
 plt.show()
 
-sum = 0
-numOfTests = 10
-for i in range(numOfTests):
-    runtime = solve(124, [1 for _ in range(124)], True)
-    sum += runtime
-print("Średni czas wykonania programu dla N = 124: ")
-print(sum / numOfTests)    
-print()
+# sum = 0
+# numOfTests = 10
+# for i in range(numOfTests):
+#     runtime = solve(124, [1 for _ in range(124)], True)
+#     sum += runtime
+# print("Średni czas wykonania programu dla N = 124: ")
+# print(sum / numOfTests)    
+# print()
 
-results = []
-start = 10
-end = 1000
-step = 10
+# results = []
+# start = 10
+# end = 1000
+# step = 10
 
-for i in range(start, end, step):
-    runtime = solve(i, [1 for _ in range(i)], True)
+# for i in range(start, end, step):
+#     runtime = solve(i, [1 for _ in range(i)], True)
 
-    results.append(runtime)
-    print("Czas wykonania dla N=" + str(i) + ": " + str(runtime))
+#     results.append(runtime)
+#     print("Czas wykonania dla N=" + str(i) + ": " + str(runtime))
 
-yPoints = [start + i * step for i in range(1, int(end / step))]
+# yPoints = [start + i * step for i in range(1, int(end / step))]
 
-plt.plot(yPoints, results, marker='o', linestyle='-')
-plt.xlabel('Parametr N')
-plt.ylabel('Czas działania funkcji (ms)')
-plt.title('Wykres zależności czasu wykonywania programu od parametru N')
-plt.show()
+# plt.plot(yPoints, results, marker='o', linestyle='-')
+# plt.xlabel('Parametr N')
+# plt.ylabel('Czas działania funkcji (ms)')
+# plt.title('Wykres zależności czasu wykonywania programu od parametru N')
+# plt.show()
 
 
 
