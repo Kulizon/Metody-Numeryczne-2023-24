@@ -19,44 +19,42 @@ def findApprox(startVector, method, e):
     n = len(startVector)
     
     x = startVector.copy()
-    xPrev = [0] * n
     results = [x.copy()]
 
     if (method != "Gauss" and method != "Jacoby"):
         return -1
 
     while True:
-        h = x.copy()
+        xNew = [i + 1 for i in range(len(x))]
 
         for i in range(n):
-            x[i] = i+1
             if (i + 1 < n):
-                x[i] -= xPrev[i+1]
+                xNew[i] -= x[i+1]
             if (i + 2 < n):
-                x[i] -= 0.15 * xPrev[i+2]
+                xNew[i] -= 0.15 * x[i+2]
 
             if (method == "Jacoby"):
                 if (i - 2 >= 0):
-                    x[i] -= 0.15 * xPrev[i-2]
+                    xNew[i] -= 0.15 * x[i-2]
                 if (i - 1 >= 0):
-                    x[i] -= xPrev[i-1]
+                    xNew[i] -= x[i-1]
 
             if (method == "Gauss"):
                 if (i - 2 >= 0):
-                    x[i] -= 0.15 * x[i-2]
+                    xNew[i] -= 0.15 * xNew[i-2]
                 if (i - 1 >= 0):
-                    x[i] -= x[i-1]
+                    xNew[i] -= xNew[i-1]
                 
-            x[i] /= 3
+            xNew[i] /= 3
 
-        if (vectorNorm(vecSubVec(xPrev, x)) < e):
-            results.append(x.copy())
+        if (vectorNorm(vecSubVec(x, xNew)) < e):
+            results.append(xNew.copy())
             break
 
-        results.append(x.copy())
-        xPrev = h.copy()
+        x = xNew.copy()
+        results.append(xNew.copy())
 
-    return results  
+    return results 
 
 def solve(N, startVector, perfCounting = False, e = 0.000001):
     start = time.perf_counter() * 1000
