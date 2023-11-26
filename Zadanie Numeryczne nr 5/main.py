@@ -50,6 +50,7 @@ def findApprox(startVector, method, e):
             x[i] /= 3
 
         if (vectorNorm(vecSubVec(xPrev, x)) < e):
+            results.append(x.copy())
             break
 
         results.append(x.copy())
@@ -90,18 +91,18 @@ def solve(N, startVector, perfCounting = False, e = 0.000001):
         print()
         print("Are Jacoby approximations equal to numpy results?")
         print(np.allclose(jacobyRes[-1], npRes, e))
-        print(list(np.mat(jacobyRes[-1])))
+        #print(list(np.mat(jacobyRes[-1])))
         print()
         print("Are Gauss approximations equal to numpy results?")
         print(np.allclose(gaussRes[-1], npRes, e))
-        print(list(np.mat(gaussRes[-1])))
+        #print(list(np.mat(gaussRes[-1])))
         print()
     
         return runtime, xPointsJacoby, xPointsGauss, yPointsJacoby, yPointsGauss
 
     return runtime
 
-val = 10
+val = 0
 runtime, xPointsJacoby, xPointsGauss, yPointsJacoby, yPointsGauss = solve(124, [val for i in range(124)], False, 0.000001)
 
 
