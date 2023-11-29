@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def y(x):
-    return 1/(1 + 50 * x**2)
 
 def poly(x, a):
     val = 0
@@ -12,7 +10,6 @@ def poly(x, a):
         val += a[i] * x**n
         n -= 1
     return val
-
 
 def aPoint(n, i):
     return -1 + 2 * (i/(n+1))
@@ -81,30 +78,32 @@ def extractPolymonalEquation(polymonal):
     text += "0"
     return text
 
-
-# for i in range(N):
-#     print("Dla xP = " + str(xP[i]))
-#     print("Dla yP = " + str(y(xP[i])))
-#     print("Dla yP interpolowane = " + str(poly(xP[i], inter)))
-#     print()   
-
 def createComparePlot(interpolationPoly, method):
     xFinal = [-1 + i / 100 for i in range(200)]
     yFinal = [y(xi) for xi in xFinal]
     yFinalInter = [poly(xi, interpolationPoly) for xi in xFinal]
 
-    plt.plot(xFinal, yFinal, label="Funkcja 1/(1 + 50x^2)")
+    plt.plot(xFinal, yFinal, label="Funkcja y(x)")
     plt.plot(xFinal, yFinalInter, label="Interpolacja")
 
-    plt.xlim(-1, 1)  
-    plt.ylim(-2, 2)  
+    # plt.xlim(-1, 1)  
+    # plt.ylim(-2, 2)  
 
     plt.legend()
     plt.xlabel('Oś x')
     plt.ylabel('Oś y')
-    plt.title("Porównanie funkcji 1/(1 + 50x^2) z funkcją interpolowną \nwzorami Lagrange'a dla N = " + str(len(interpolationPoly)-1) + " węzłów interpolacyjnych i metody (" + method + ")")
+    plt.title("Porównanie funkcji y(x) z funkcją interpolowną \nwzorami Lagrange'a dla N = " + str(len(interpolationPoly)-1) + " węzłów interpolacyjnych i metody (" + method + ")")
     plt.show()
 
+
+def y(x):
+    return 1/(1 + 50 * x**2)
+
+# def y(x):
+#     return math.e**x * abs(x)
+
+# def y(x):
+#     return 1/(2 + x**5)
 
 def createInterpolation(N, method):
     if (method != "a" and method != "b"):
@@ -118,7 +117,10 @@ def createInterpolation(N, method):
     #print(extractPolymonalEquation(inter))
 
 
-createInterpolation(30, "b")
+#createInterpolation(8, "a")
+createInterpolation(16, "a")
+#createInterpolation(8, "b")
+createInterpolation(16, "b")
 
 
 
