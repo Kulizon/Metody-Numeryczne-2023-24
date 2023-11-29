@@ -102,7 +102,7 @@ def createComparePlot(interpolationPoly, method):
     plt.legend()
     plt.xlabel('Oś x')
     plt.ylabel('Oś y')
-    plt.title("Porównanie funkcji 1/(1 + 50x^2) z funkcją interpolowną \nwzorami Lagrange'a dla N = " + str(len(xFinal)) + " węzłów interpolacyjnych i metody (" + method + ")")
+    plt.title("Porównanie funkcji 1/(1 + 50x^2) z funkcją interpolowną \nwzorami Lagrange'a dla N = " + str(len(interpolationPoly)-1) + " węzłów interpolacyjnych i metody (" + method + ")")
     plt.show()
 
 
@@ -118,7 +118,7 @@ def createInterpolation(N, method):
     #print(extractPolymonalEquation(inter))
 
 
-createInterpolation(20, "b")
+createInterpolation(30, "b")
 
 
 
