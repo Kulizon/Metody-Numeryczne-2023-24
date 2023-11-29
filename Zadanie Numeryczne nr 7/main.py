@@ -3,17 +3,26 @@ import matplotlib.pyplot as plt
 import math
 
 def y(x):
-    return 1/(50 + x**2)
+    return 1/(1 + 50 * x**2)
+
+def poly(x, a):
+    val = 0
+    n = len(a) - 1
+    for i in range(len(a)):
+        val += a[i] * x**n
+        n -= 1
+    return val
+
 
 def aPoint(n, i):
-    return -1 +  2*i/(n+1)
+    return -1 + 2 * (i/(n+1))
 
 def bPoint(n, i):
     return math.cos((2 * i + 1) / (2 * (n + 1)) * math.pi)
 
-def createPoints(n, createFunction):
+def createPointsX(n, createFunction):
     points = []
-    for i in range(n):
+    for i in range(n + 1):
         points.append(createFunction(n, i))
     return points
 
@@ -41,11 +50,9 @@ def l(x, i):
 
     cur = [1]
 
-    for j in range(0, n):
-        print(cur, [x[j]])
+    for j in range(n):
         if (i != j):
             cur = mulPolymonial(cur, [1, -x[j]])
-    print()
     return np.array(cur) * 1/divider
     
 def p(xP, yP):
@@ -63,12 +70,58 @@ def p(xP, yP):
 
     return sum # nasz wielomian interpolacyjny
 
-xP = [-1, 0, 1, 2]
-yP = [2, 1, 4, 5]
+def extractPolymonalEquation(polymonal):
+    text = ""
+    n = len(polymonal) - 1
+    for i in range(len(polymonal)):
+        if polymonal[i] == 0:
+            continue
+        text += str(round(polymonal[i], 2)) + " * x^{" + str(n) + "} + "
+        n -= 1
+    text += "0"
+    return text
 
-result = p(xP, yP)
 
-print(result)
+# for i in range(N):
+#     print("Dla xP = " + str(xP[i]))
+#     print("Dla yP = " + str(y(xP[i])))
+#     print("Dla yP interpolowane = " + str(poly(xP[i], inter)))
+#     print()   
+
+def createComparePlot(interpolationPoly, method):
+    xFinal = [-1 + i / 100 for i in range(200)]
+    yFinal = [y(xi) for xi in xFinal]
+    yFinalInter = [poly(xi, interpolationPoly) for xi in xFinal]
+
+    plt.plot(xFinal, yFinal, label="Funkcja 1/(1 + 50x^2)")
+    plt.plot(xFinal, yFinalInter, label="Interpolacja")
+
+    plt.xlim(-1, 1)  
+    plt.ylim(-2, 2)  
+
+    plt.legend()
+    plt.xlabel('Oś x')
+    plt.ylabel('Oś y')
+    plt.title("Porównanie funkcji 1/(1 + 50x^2) z funkcją interpolowną \nwzorami Lagrange'a dla N = " + str(len(xFinal)) + " węzłów interpolacyjnych i metody (" + method + ")")
+    plt.show()
+
+
+def createInterpolation(N, method):
+    if (method != "a" and method != "b"):
+        print("Zła metoda!")
+        return
+
+    xP = createPointsX(N, bPoint if method == "b" else aPoint)
+    yP = [y(xP[i]) for i in range(N + 1)]
+    interpolationPoly = p(xP, yP)
+    createComparePlot(interpolationPoly, method)
+    #print(extractPolymonalEquation(inter))
+
+
+createInterpolation(20, "b")
+
+
+
 
 
 
