@@ -199,14 +199,14 @@ A = [[8, 1, 0, 0],
      [0, 2, 6, 3],
      [0, 0, 3, 5]]
 e = 0.00000001
-wilkinsonShift = -5
+wilkinsonShift = 4
 _, powerMethodEigenVals = eigenValuePowerMethod(A, e)
 _, powerMethodEigenValsShifted = eigenValuePowerMethod(A, e, wilkinsonShift)
 _, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A, e)
 
 # createPowerMethodPlot(powerMethodEigenVals, A) 
-createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, wilkinsonShift)
-# createQrMethodPlot(qrMethodEigenVals)
+# createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, wilkinsonShift)
+createQrMethodPlot(qrMethodEigenVals)
 #createQrMethodTriangMatrixPlot(underDiagSums)
 
 
