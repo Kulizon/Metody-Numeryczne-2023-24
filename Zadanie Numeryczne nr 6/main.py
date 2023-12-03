@@ -69,8 +69,6 @@ def eigenValuePowerMethod(initialA, e, shiftVal = None):
     print(np.allclose(finalEigenVec, finalNumpyMaxEigenValVec, e))
     print()
 
-    print(finalEigenVec)
-
     return resultVecs, resultLambdas
 
 def getDiagElements(A):
@@ -166,8 +164,11 @@ def createQrMethodPlot(eigenVals):
         xPoints.append([])
         yPoints.append([])
         for j in range(len(eigenVals)):
+            diff = abs(exactEigenVal - eigenVals[j][i])
+            if (diff == 0):
+                break
             xPoints[i].append(j)
-            yPoints[i].append(abs(exactEigenVal - eigenVals[j][i]))
+            yPoints[i].append(diff)
 
     plt.plot(xPoints[0], yPoints[0], label="Wartość własna 1")
     plt.plot(xPoints[1], yPoints[1], label="Wartość własna 2")
