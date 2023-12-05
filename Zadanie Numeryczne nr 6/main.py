@@ -54,8 +54,8 @@ def eigenValuePowerMethod(initialA, e, shiftVal = None):
         if (diff < e / 100):
             break
 
-    finalEigenVec = resultVecs[len(resultVecs) - 1]
-    finalEigenVal = resultLambdas[len(resultLambdas) - 1]
+    finalEigenVec = resultVecs[-1]
+    finalEigenVal = resultLambdas[-1]
     
     numpyEigenValues, numpyEigenVectors = np.linalg.eig(A)
     print("Czy moja maksymalna wartość własna obliczona metodą potęgową zgadza się z numpy?")
@@ -63,8 +63,10 @@ def eigenValuePowerMethod(initialA, e, shiftVal = None):
     print()
 
     finalNumpyMaxEigenValVec = []
+
     for i in range(4):
         finalNumpyMaxEigenValVec.append(numpyEigenVectors[i][0] / (-0.62856775)) # convert to my base
+
     print("Czy mój wektor odpowiadający największej wartości własnej zgadza się z numpy?")
     print(np.allclose(finalEigenVec, finalNumpyMaxEigenValVec, e))
     print()
@@ -208,12 +210,12 @@ p = 1/2 * (lambda2 + lambdaN)
 
 _, powerMethodEigenVals = eigenValuePowerMethod(A, e)
 _, powerMethodEigenValsShifted = eigenValuePowerMethod(A, e, p)
-_, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A, e)
+qrMethodEigenVecs, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A, e)
 
-# createPowerMethodPlot(powerMethodEigenVals, A) 
+createPowerMethodPlot(powerMethodEigenVals, A) 
 createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, p)
-# createQrMethodPlot(qrMethodEigenVals)
-#createQrMethodTriangMatrixPlot(underDiagSums)
+createQrMethodPlot(qrMethodEigenVals)
+createQrMethodTriangMatrixPlot(underDiagSums)
 
 
 
