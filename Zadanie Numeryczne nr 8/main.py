@@ -115,19 +115,66 @@ def f3(x):
 def f4(x):
     return math.e**(-x)
 
-def solve(points, functions):
+def approximator(x,functions, a):
+    sum = 0
+    for i in range(len(functions)):
+        sum += a[i] * functions[i](x)
+    return sum
+
+def getPointsAsArrays(points):
+    xPoints = []
+    yPoints = []
+    for i in range(len(points)):
+        x = points[i][0]
+        y = points[i][1]
+        xPoints.append(x)
+        yPoints.append(y)
+
+    return xPoints, yPoints
+
+def solveForCoefficients(points, functions):
     n = len(points)
-    prm = 4
-    A = [[ 0 for _ in range(prm)] for _ in range(n)]
+    m = len(functions)
+    A = [[ 0 for _ in range(m)] for _ in range(n)]
 
+    xPoints, yPoints = getPointsAsArrays(points)
     for i in range(n):
-        for j in range(prm):
-            x = points[i][0]
-            A[i][j] = functions[j](x)
+        for j in range(m):
+            A[i][j] = functions[j](xPoints[i])
 
-    print(A)
+    A = np.array(A)
+    U, D, V = np.linalg.svd(A)
 
-solve(points, [f1, f2, f3, f4])
+    U = U[:,:m]
+    V = V[:n,:]
+    D = np.diag(D)
+
+    Dp = [[0 for _ in range(m)] for _ in range(m)]
+    for i in range(len(D)):
+        Dp[i][i] = 1/D[i][i]
+    Ap = np.transpose(V) @ Dp @ np.transpose(U)
+    a = Ap @ yPoints
+
+    return a
+
+def createPlot(points, functions, a):
+    xPoints, yPoints = getPointsAsArrays(points)
+
+    approximatedPoints = []
+    for p in points:
+        approximatedPoints.append(approximator(p[0], functions, a))
+
+    plt.plot(xPoints, yPoints, label="Og")
+    plt.plot(xPoints, approximatedPoints, label="My")
+    plt.legend()
+    plt.xlabel('Wyk')
+    plt.ylabel('')
+    plt.title('')
+    plt.show()
+
+functions = [f1, f2, f3, f4]
+a = solveForCoefficients(points, functions)
+createPlot(points, functions, a)
 
 
 

@@ -208,14 +208,16 @@ lambdaN = 2.07
 
 p = 1/2 * (lambda2 + lambdaN)
 
+print(p)
+
 _, powerMethodEigenVals = eigenValuePowerMethod(A, e)
 _, powerMethodEigenValsShifted = eigenValuePowerMethod(A, e, p)
 qrMethodEigenVecs, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A, e)
 
-createPowerMethodPlot(powerMethodEigenVals, A) 
-createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, p)
-createQrMethodPlot(qrMethodEigenVals)
-createQrMethodTriangMatrixPlot(underDiagSums)
+# createPowerMethodPlot(powerMethodEigenVals, A) 
+# createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, p)
+# createQrMethodPlot(qrMethodEigenVals)
+# createQrMethodTriangMatrixPlot(underDiagSums)
 
 
 
