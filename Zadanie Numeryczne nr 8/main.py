@@ -72,74 +72,87 @@ def createPlot(points, functions, a, label, exactPoints = None):
     plt.title(label)
     plt.show()
 
-def f1(x):
-    return x**2
-def f2(x):
-    return math.sin(x)
-def f3(x):
-    return math.cos(5*x)
-def f4(x):
-    return math.e**(-x)
-
-functionsA = [f1, f2, f3, f4]
-pointsA = pointsData.points
-a = solveForCoefficients(pointsA, functionsA)
-createPlot(pointsA, functionsA, a, 'Wykres porównujący funkcję przybliżoną \ndo rozkładu punktów danych w (a)')
 
 
-################################################################33
+###############################################################
+
+# def f1(x):
+#     return x**2
+# def f2(x):
+#     return math.sin(x)
+# def f3(x):
+#     return math.cos(5*x)
+# def f4(x):
+#     return math.e**(-x)
+# functionsA = [f1, f2, f3, f4]
+# pointsA = pointsData.points
+# a = solveForCoefficients(pointsA, functionsA)
+# createPlot(pointsA, functionsA, a, 'Wykres porównujący funkcję przybliżoną \ndo rozkładu punktów danych w (a)')
+
+
+###############################################################
+
+# def exactG(x):
+#     return 0.01 * x**4 + (-2 * x**3) + 10 * x**2 + (-1 * x)
 
 # def g1(x):
-#     return 0.01 * x**4
+#     return x**4
 # def g2(x):
-#     return -2 * x**3
+#     return x**3
 # def g3(x):
-#     return 10 * x**2
+#     return x**2
 # def g4(x):
-#     return -1 * x
+#     return x
 
 # functionsB = [g1, g2, g3, g4]
 # pointsB = []
 # exactPointsB = []
-# for i in range(100):
-#     y = 0
-#     x = i / 20
-#     for j in range(len(functionsB)):
-#          y += functionsB[j](x)
-#     noise = random.randrange(-4, 4)
-#     pointsB.append((x, y + noise))
+
+# for i in range(1000):
+#     x = i / 200
+#     y = exactG(x)
 #     exactPointsB.append((x, y))
 
-# b = solveForCoefficients(pointsB, functionsB)
-# createPlot(pointsB, functionsB, b, 'Wykres porównujący funkcję przybliżoną \ndo rozkładu punktów danych dla nowej funckji i dokładnie obliczonej funkcji', exactPointsB)
-
-
-################################################################
-
-
-# def h1(x):
-#     return math.sin(x)
-# def h2(x):
-#     return math.cos(math.e**(2/5 * x))
-# def h3(x):
-#     return x**(-2)
-# def h4(x):
-#     return math.log(x)
-
-# functionsC = [h1, h2, h3, h4]
-# pointsC = []
-# exactPointsC = []
 # for i in range(100):
-#     y = 0
-#     x = 1 + i / 10
-#     for j in range(len(functionsC)):
-#          y += functionsC[j](x)
-#     noise = random.randrange(-100, 100) / 100
-#     pointsC.append((x, y + noise))
-#     exactPointsC.append((x, y))
+#     x = i / 20
+#     y = exactG(x)
+#     noise = random.randrange(-40, 40) / 10
+#     pointsB.append((x, y + noise))
 
-# c = solveForCoefficients(pointsC, functionsC)
-# createPlot(pointsC, functionsC, c, 'Wykres porównujący funkcję przybliżoną \ndo rozkładu punktów danych dla nowej funckji i dokładnie obliczonej funkcji', exactPointsC)
+# b = solveForCoefficients(pointsB, functionsB)
+# createPlot(pointsB, functionsB, b, 'Wykres porównujący funkcję przybliżoną do rozkładu \npunktów danych dla nowej funckji i funkcji modelującej G(x)', exactPointsB)
+
+
+###############################################################
+
+def exactH(x):
+    return math.sin(x) + 3 * math.cos(math.e**(2/5 * x)) + 1/2 * x**(-2) + 2 * math.log(x)
+
+def h1(x):
+    return math.sin(x)
+def h2(x):
+    return math.cos(math.e**(2/5 * x))
+def h3(x):
+    return x**(-2)
+def h4(x):
+    return math.log(x)
+
+functionsC = [h1, h2, h3, h4]
+pointsC = []
+exactPointsC = []
+for i in range(500):
+    x = 1 + i / 50
+    y = exactH(x)
+    exactPointsC.append((x, y))
+
+for i in range(100):
+    x = 1 + i / 10
+    y = exactH(x)
+    noise = random.randrange(-250, 250) / 10
+    pointsC.append((x, y + noise))
+
+c = solveForCoefficients(pointsC, functionsC)
+createPlot(pointsC, functionsC, c, 'Wykres porównujący funkcję przybliżoną do rozkładu \npunktów danych dla nowej funckji i funkcji modelującej H(x)', exactPointsC)
 
 
 
