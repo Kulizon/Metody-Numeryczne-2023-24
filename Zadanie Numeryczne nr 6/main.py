@@ -120,7 +120,7 @@ def createPowerMethodPlot(eigenVals, initialA, shiftVal = None):
         xPointsPowerMethod.append(i+1)
         yPointsPowerMethod.append(abs(eigenVals[i] - maxEigenValueNumpy(A)))
 
-    plt.figure(figsize=(7, 6))
+    plt.figure(figsize=(16, 8))
     plt.plot(xPointsPowerMethod, yPointsPowerMethod, label="Metoda Potęgowa")
     plt.yscale("log")
     plt.legend()
@@ -214,7 +214,7 @@ _, powerMethodEigenVals = eigenValuePowerMethod(A, e)
 _, powerMethodEigenValsShifted = eigenValuePowerMethod(A, e, p)
 qrMethodEigenVecs, qrMethodEigenVals, underDiagSums = eigenValueQrMethod(A, e)
 
-# createPowerMethodPlot(powerMethodEigenVals, A) 
+createPowerMethodPlot(powerMethodEigenVals, A) 
 # createPowerMethodComparisonPlot(powerMethodEigenVals, powerMethodEigenValsShifted, A, p)
 # createQrMethodPlot(qrMethodEigenVals)
 # createQrMethodTriangMatrixPlot(underDiagSums)
