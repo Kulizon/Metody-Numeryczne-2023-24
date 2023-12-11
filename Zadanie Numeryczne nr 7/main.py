@@ -118,9 +118,9 @@ def createInterpolation(N, method):
 
 
 #createInterpolation(8, "a")
-createInterpolation(16, "a")
+#createInterpolation(37, "a")
 #createInterpolation(8, "b")
-createInterpolation(16, "b")
+createInterpolation(45, "b")
 
 
 
